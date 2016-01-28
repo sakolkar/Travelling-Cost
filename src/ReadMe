@@ -1,0 +1,27 @@
+Read me for ECE 420 Lab2 Script Kit
+Jan. 2016
+
+=====
+Overview:
+    There are four groups of scripts in this kit
+
+-----
+    Data generating program:
+    datagen.c      source file for the input date generation program
+
+-----
+    Important functions:
+    timer.h        macro definition for the time measurement
+    Lab2IO.h       header for the Lab2IO.c, needs to be included if call the IOs directly from Lab2IO.c
+    Lab2IO.c       source file for the IO functions, needs to be referred in the compiler line if the functions are called in the program
+
+-----
+    Verification program:
+    serialtester.c source file for the testing program, depending on the Lab2IO.c
+
+-----
+    Reference code with barrier:
+    lab2sol_bar.c  source file of a reference solution with barrier
+
+=====
+Please also find the detailed instructions in the comments of the individual files.
