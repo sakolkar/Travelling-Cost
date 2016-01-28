@@ -1,0 +1,8 @@
+*.swp
+*.swo
+data_input
+data_output
+datagen
+main
+serialtester
+lab2sol_bar
