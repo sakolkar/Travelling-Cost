@@ -7,7 +7,6 @@
 // Global Variables
 int thread_count_;
 int **dp_;
-int *times_visited;
 int city_count_;
 
 // Function Signatures
@@ -17,7 +16,6 @@ int main(int argc, char* argv[]) {
 	long thread_i;
 	pthread_t* thread_handles;
 	double start, end;
-	int i;
 
 	if (argc != 2) {
 		printf("Please indicate the number of threads!\n");
@@ -25,10 +23,6 @@ int main(int argc, char* argv[]) {
 	thread_count_ = strtol(argv[1], NULL, 10);
 
 	Lab2_loadinput(&dp_, &city_count_);
-	times_visited = malloc(city_count_ * sizeof *times_visited);
-	for(i = 0; i < city_count_; i++)
-		times_visited[i] = 0;
-
 	thread_handles = malloc(thread_count_ * sizeof *thread_handles);
 
 	GET_TIME(start);
@@ -55,7 +49,6 @@ void* thread_subcal(void* rank) {
 			for (j = 0; j < city_count_; ++j)
 				if ((temp = dp_[i][k]+dp_[k][j]) < dp_[i][j])
 					dp_[i][j] = temp;
-			times_visited[i] += 1;
 		}
 	}
 }
