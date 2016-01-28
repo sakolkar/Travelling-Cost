@@ -8,6 +8,8 @@
 int thread_count_;
 int **dp_;
 int city_count_;
+int **weight_iteration;
+sem_t **barrier_sems;
 
 // Function Signatures
 void* thread_subcal(void *);
@@ -24,6 +26,9 @@ int main(int argc, char* argv[]) {
 
 	Lab2_loadinput(&dp_, &city_count_);
 	thread_handles = malloc(thread_count_ * sizeof *thread_handles);
+
+	weight_iteration = CreateMat(city_count_);
+	
 
 	GET_TIME(start);
 	for (thread_i = 0; thread_i < thread_count_; ++thread_i)
