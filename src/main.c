@@ -9,7 +9,6 @@ int thread_count_;
 int **dp_;
 int city_count_;
 int **weight_iteration;
-sem_t **barrier_sems;
 
 // Function Signatures
 void* thread_subcal(void *);
@@ -20,7 +19,8 @@ int main(int argc, char* argv[]) {
     double start, end;
 
     if (argc != 2) {
-        printf("Please indicate the number of threads!\n");
+        fprintf(stderr, "Please indicate the number of threads!\n");
+        exit(EXIT_FAILURE);
     }
     thread_count_ = strtol(argv[1], NULL, 10);
 
@@ -29,11 +29,11 @@ int main(int argc, char* argv[]) {
 
     weight_iteration = CreateMat(city_count_);
 
-    barrier_sems = malloc(city_count_ * sizeof(*sem_t));
-    int i;
-    for(i = 0; i < city_count_; i++) {
-        barrier_sems[i] = malloc(city_count_ * sizeof(sem_t));
-    }
+    // barrier_sems = malloc(city_count_ * sizeof(*sem_t));
+    // int i;
+    // for(i = 0; i < city_count_; i++) {
+    //     barrier_sems[i] = malloc(city_count_ * sizeof(sem_t));
+    // }
 
     GET_TIME(start);
     for (thread_i = 0; thread_i < thread_count_; ++thread_i)
@@ -57,18 +57,20 @@ void* thread_subcal(void* rank) {
     for (k = 0; k < city_count_; ++k){
         for (i = myrank * city_count_ / thread_count_; i < (myrank + 1) * city_count_ / thread_count_; ++i) {
             for (j = 0; j < city_count_; ++j) {
-                if (weight_iteration[i][k] < k - 1) {
+                // if (weight_iteration[i][k] < k - 1) {
                     //block
-                }
-                if (weight_iteration[k][j] < k - 1) {
+                // }
+                // if (weight_iteration[k][j] < k - 1) {
                     //block
-                }
+                // }
                 if ((temp = dp_[i][k]+dp_[k][j]) < dp_[i][j]) {
                     dp_[i][j] = temp;
                 }
-                weight_iteration[i][j] += 1;
+                // weight_iteration[i][j] += 1;
                 //unblock
             }
         }
     }
+
+    return NULL;
 }

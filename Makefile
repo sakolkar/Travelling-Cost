@@ -1,5 +1,5 @@
 main:
-	gcc -g -Wall -o main src/main.c src/Lab2IO.c -lm -lphread
+	gcc -g -Wall -o main src/main.c src/Lab2IO.c -lm -lpthread
 
 datagen:
 	gcc -o datagen src/datagen.c src/Lab2IO.c
