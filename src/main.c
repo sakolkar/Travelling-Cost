@@ -3,12 +3,14 @@
 #include <pthread.h>
 #include "timer.h"
 #include "Lab2IO.h"
+#include <semaphore.h>
 
 // Global Variables
 int thread_count_;
 int **dp_;
 int city_count_;
-int **weight_iteration;
+
+sem_t ***sem_array;
 
 // Function Signatures
 void* thread_subcal(void *);
@@ -24,16 +26,31 @@ int main(int argc, char* argv[]) {
     }
     thread_count_ = strtol(argv[1], NULL, 10);
 
-    Lab2_loadinput(&dp_, &city_count_);
     thread_handles = malloc(thread_count_ * sizeof *thread_handles);
 
-    weight_iteration = CreateMat(city_count_);
+    Lab2_loadinput(&dp_, &city_count_);
+    
+    int i, j, k;
+    sem_array = malloc(city_count_ * sizeof *sem_array);
 
-    // barrier_sems = malloc(city_count_ * sizeof(*sem_t));
-    // int i;
-    // for(i = 0; i < city_count_; i++) {
-    //     barrier_sems[i] = malloc(city_count_ * sizeof(sem_t));
-    // }
+    for (i = 0; i < city_count_; ++i) {
+        sem_array[i] = malloc(city_count_ * sizeof *sem_array[i]);
+        for (j = 0; j < city_count_; ++j) {
+            sem_array[i][j] = malloc(city_count_ * sizeof *sem_array[i][j]);
+            for (k = 0; k < city_count_; ++k) {
+                sem_init(&sem_array[i][j][k],
+                         0, // shared == 0; shared between threads
+                         0);// init_value is set to zero
+            } 
+        }
+    }
+
+    
+    for (i = 0; i < city_count_; ++i) {
+        for (j = 0; j < city_count_; ++j) {
+            sem_post(&sem_array[i][j][0]);
+        }
+    }
 
     GET_TIME(start);
     for (thread_i = 0; thread_i < thread_count_; ++thread_i)
@@ -57,17 +74,17 @@ void* thread_subcal(void* rank) {
     for (k = 0; k < city_count_; ++k){
         for (i = myrank * city_count_ / thread_count_; i < (myrank + 1) * city_count_ / thread_count_; ++i) {
             for (j = 0; j < city_count_; ++j) {
-                // if (weight_iteration[i][k] < k - 1) {
-                    //block
-                // }
-                // if (weight_iteration[k][j] < k - 1) {
-                    //block
-                // }
+                
+                sem_wait(&sem_array[i][k][k]);
+                sem_post(&sem_array[i][k][k]);
+
+                sem_wait(&sem_array[k][j][k]);
+                sem_post(&sem_array[k][j][k]);
+                
                 if ((temp = dp_[i][k]+dp_[k][j]) < dp_[i][j]) {
                     dp_[i][j] = temp;
+                    sem_post(&sem_array[i][j][k]);
                 }
-                // weight_iteration[i][j] += 1;
-                //unblock
             }
         }
     }
