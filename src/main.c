@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     thread_handles = malloc(thread_count_ * sizeof *thread_handles);
 
     Lab2_loadinput(&dp_, &city_count_);
-    
+
     int i, j, k;
     sem_array = malloc(city_count_ * sizeof *sem_array);
 
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    
+
     for (i = 0; i < city_count_; ++i) {
         for (j = 0; j < city_count_; ++j) {
             sem_post(&sem_array[i][j][0]);
@@ -87,7 +87,7 @@ void* thread_subcal(void* rank) {
                 if ((temp = dp_[i][k]+dp_[k][j]) < dp_[i][j]) {
                     dp_[i][j] = temp;
                 }
-                
+
                 sem_post(&sem_array[i][j][k+1]);
             }
         }
