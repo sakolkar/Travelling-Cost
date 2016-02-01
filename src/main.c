@@ -74,17 +74,21 @@ void* thread_subcal(void* rank) {
     for (k = 0; k < city_count_; ++k){
         for (i = myrank * city_count_ / thread_count_; i < (myrank + 1) * city_count_ / thread_count_; ++i) {
             for (j = 0; j < city_count_; ++j) {
-                
+
+                //printf("[%i] waiting on %d, %d, %d.\n", myrank, i, k, k);
                 sem_wait(&sem_array[i][k][k]);
                 sem_post(&sem_array[i][k][k]);
 
+                //printf("[%i] waiting on %d, %d, %d.\n", myrank, k, j, k);
                 sem_wait(&sem_array[k][j][k]);
                 sem_post(&sem_array[k][j][k]);
-                
+
+                //printf("[%i] done waiting.\n", myrank);
                 if ((temp = dp_[i][k]+dp_[k][j]) < dp_[i][j]) {
                     dp_[i][j] = temp;
-                    sem_post(&sem_array[i][j][k]);
                 }
+                
+                sem_post(&sem_array[i][j][k+1]);
             }
         }
     }
