@@ -3,7 +3,7 @@ make main
 make datagen
 make serialtester
 
-./datagen
+./datagen -s $2
 ./main $1
 ./serialtester
 
