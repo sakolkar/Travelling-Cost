@@ -3,7 +3,7 @@ make main
 make datagen
 make serialtester
 
-loops=100
+loops=10000
 
 #!/bin/bash
 for((c=1; c<=$loops; c++))
