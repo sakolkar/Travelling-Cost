@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
     GET_TIME(end);
 
     Lab2_saveoutput(dp_, city_count_, end-start);
-
+    printf("Time taken: %f\n", end-start);
     return EXIT_SUCCESS;
 }
 
